@@ -10,21 +10,21 @@ pipeline{
     }
     stages{
         stage("Init"){
-            when { expresion { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ }}
+            when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
             steps{
                 echo 'Init stage'
                 sh 'cd terraform && terraform init -input=false'
             }
         }
          stage("Validate"){
-            when { expresion { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ }} 
+            when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } } 
             steps{
                 echo 'Validate stage'
                 sh 'cd terraform && terraform validate'
             }
         }
         stage("Plan and Create PR"){
-            when { expresion { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ }}
+            when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
             steps{
                 echo 'Plan Stage'
                 sh 'cd terraform && terraform plan -out=plan -input=false'
@@ -32,13 +32,13 @@ pipeline{
             }
         }
         stage("Apply"){
-            when { expresion { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ }}
+            when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
             steps{
                 echo 'Apply Stage'
             }
         }
         stage("Destroy"){
-            when { expresion { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ }}
+            when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
             steps{
                 echo 'Destroy Stage'
             }
