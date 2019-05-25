@@ -5,6 +5,9 @@ pipeline{
         LOGIN = sh script:"vault login -method=github token=${TOKEN_OBA}"
         DIGITALOCEAN_TOKEN= sh(script:'vault kv get -field=token workshop/OrlandoBA/digitalocean', returnStdout: true).trim()
     }
+    triggers {
+        pollSCM('H/5****')
+    }
     stages{
         stage("Init"){
             steps{
