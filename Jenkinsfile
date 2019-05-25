@@ -1,29 +1,38 @@
 pipeline{
     agent any
+    environment {
+        TOKEN_OBA = credentials('git-token-OBA')
+        LOGIN = sh script:"vault login -method=github token=${TOKEN_OBA}"
+        DIGITALOCEAN_TOKEN= sh(script:'vault kv get -field=token workshop/OrlandoBA/digitalocean', returnStdout: true).trim()
+    }
     stages{
         stage("Init"){
             steps{
-                echo 'hola lol'
+                echo 'Init stage'
+                sh 'cd terraform && terraform init -input=false'
             }
         }
          stage("Validate"){
             steps{
-                echo 'hola 2'
+                echo 'Validate stage'
+                sh 'cd terraform && terraform validate'
             }
         }
         stage("Plan and Create PR"){
             steps{
-                echo 'hola 3'
+                echo 'Plan Stage'
+                sh 'cd terraform && terraform plan -out=plan -input=false'
+                input(message: "Do you want to create a PR to apply this plan?", ok: 'yes')
             }
         }
         stage("Apply"){
             steps{
-                echo 'hola 2'
+                echo 'Apply Stage'
             }
         }
         stage("Destroy"){
             steps{
-                echo 'hola 4'
+                echo 'Destroy Stage'
             }
         }
     }
